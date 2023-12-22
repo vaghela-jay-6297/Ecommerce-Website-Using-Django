@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<!--Body Content-->
+<div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">Email Verification</h1></div>
+          </div>
+    </div>
+    <!--End Page Title-->
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
+                <div class="mb-4">
+                    {% if warning %}
+                        <div class="alert alert-warning" role="alert" style="text-align: center;">{{ warning }}</div>
+                    {% endif %}
+                    {% if success %}
+                        <div class="alert alert-success" role="alert" style="text-align: center;">{{ success }}</div>
+                    {% endif %}
+                   <form method="post" action="{% url 'otp-verifiction' %}" id="CustomerotpForm" accept-charset="UTF-8" class="contact-form">	
+                    {% csrf_token %}
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label for="Customerotp">Your OTP</label>
+                                <input type="number" name="uotp" id="Customerotp" autocorrect="off" autocapitalize="off" autofocus="">
+                            </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <input type="submit" class="btn mb-3" value="Verify OTP">
+                            <button type="button" class="btn mb-3">Re-send OTP</button>
+                        </div>
+                     </div>
+                 </form>
+                </div>
+               </div>
+        </div>
+    </div>
+    
+</div>
+<!--End Body Content-->
+{% endblock %}

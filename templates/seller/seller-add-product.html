@@ -1,0 +1,112 @@
+{% extends 'seller/seller-base.html' %}
+{% load static %}
+{% block body %}
+
+<div id="page-content">
+    <!--Page Title-->
+    <div class="page section-header text-center">
+        <div class="page-title">
+            <div class="wrapper"><h1 class="page-width">Add Product</h1></div>
+          </div>
+    </div>
+    <!--End Page Title-->
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 main-col offset-md-3">
+                <div class="mb-4">
+                    {% if warning %}
+                        <div class="alert alert-warning" role="alert" style="text-align: center;">{{ warning }}</div>
+                    {% endif %}
+                    {% if success %}
+                        <div class="alert alert-success" role="alert" style="text-align: center;">{{ success }}</div>
+                    {% endif %}
+                   <form method="post" action="{% url 'seller-add-product' %}" id="CustomerLoginForm" accept-charset="UTF-8" class="contact-form" enctype="multipart/form-data">	
+                    {% csrf_token %}
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <select name='product_category' autofocus="">
+                                    <option selected>Select Category</option>
+                                    <option value="Men">Men</option>
+                                    <option value="Women">Women</option>
+                                    <option value="Kids">Kids</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <select name='product_brand'>
+                                    <option selected>Select Brand</option>
+                                    <option value="Allen Solly">Allen Solly</option>
+                                    <option value="US Polo">US Polo</option>
+                                    <option value="Supreme">Supreme</option>
+                                    <option value="Levi's">Levi's</option>
+                                    <option value="Zara">Zara</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Calvin Klein">Calvin Klein</option>
+                                    <option value="Tommy Hilfiger">Tommy Hilfiger</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <select name='product_size'>
+                                    <option selected>Select Size</option>
+                                    <option value="XS">XS</option>
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                    <option value="XXXL">XXXL</option>
+                                </select>
+                            </div>
+                        </div>
+                          
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label for="product_name">Product Name</label>
+                                <input type="text" name="product_name" id="product_name">
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label for="product_price">Product Price</label>
+                                <input type="number" name="product_price" id="product_price" class="" autocorrect="off" autocapitalize="off">
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                        	<div class="form-group">
+                                <label for="product_desc">Product Description</label>
+                                <textarea rows="6" id="product_desc" name="product_desc"></textarea>
+                            </div>
+                        </div> 
+
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label for="product_image">Chose Product Main Image</label>
+                                <input type="file" id="product_image" name="product_image" accept="image/*" style="padding-top: 5px;" required>
+                            </div>
+                        </div> 
+                        
+                      </div>
+                      <div class="row">
+                        <div class="text-left col-12 col-sm-12 col-md-12 col-lg-12">
+                            <input type="submit" class="btn mb-3" value="Add Product">
+                        </div>
+                     </div>
+                 </form>
+                </div>
+               </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

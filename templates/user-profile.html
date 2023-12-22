@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+ <!--Page Title-->
+ <div class="page section-header text-center">
+    <div class="page-title">
+        <div class="wrapper"><h1 class="page-width">User's Profile</h1></div>
+      </div>
+</div>
+<!--End Page Title-->
+
+<div class="container">
+	<div class="row">
+    {% if user %}
+    <form method="post" action="{% url 'user-profile' %}" name="update-profile" enctype="multipart/form-data" class="form-horizontal" role="form">
+        {% csrf_token %}
+      <!-- left column -->
+      <div class="col-md-3">
+        <div class="text-center">
+          <img src="{{ user.profile_picture.url }}" class="avatar img-circle" alt="avatar">
+          <h6>Upload a different photo...</h6>
+
+          <input type="file" name='profile_picture' class="form-control">
+        </div>
+      </div>
+      
+      <!-- edit form column -->
+      <div class="col-md-9 personal-info">
+        {% if warning %}
+            <div class="alert alert-warning alert-dismissable" role="alert">{{ warning }}</div>
+        {% endif %}
+        {% if success %}
+            <div class="alert alert-success alert-dismissable" role="alert">{{ success }}</div>
+        {% endif %}
+        
+        <div class="form-group">
+            <label class="col-lg-3 control-label">Email:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" value="{{ user.email }}" readonly>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-lg-3 control-label">First name:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" name="fname" value="{{ user.fname }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-lg-3 control-label">Last name:</label>
+            <div class="col-lg-8">
+              <input class="form-control" type="text" name="lname" value="{{ user.lname }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-lg-8">
+                <label for="CustomerMobile">Mobile Number</label>
+                <input type="number" name="mobile" value="{{ user.mobile }}" id="CustomerMobile" autocorrect="off" autocapitalize="off" >
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-lg-8">
+                    <label for="CustomerAddress">Address</label>
+                    <textarea required="" rows="6" id="CustomerAddress" name="address">{{ user.address }}</textarea>
+                </div>
+           </div> 
+          
+          <div class="form-group">
+            <label class="col-md-3 control-label"></label>
+            <div class="col-md-8">
+              <button type="submit" class="btn btn-primary">Update Profile</button>
+              <span></span>
+              <input type="button" style="background-color: red;color: white;font-size: 14px;width: auto;" value="Delete Account">
+            </div>
+          </div>
+        </form>
+        {% endif %}
+      </div>
+  </div>
+</div>
+<hr>
+{% endblock %}
