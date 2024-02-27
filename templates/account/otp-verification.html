@@ -1,0 +1,69 @@
+{% extends 'base.html' %}   <!-- Extend main base file for header and footer part -->
+{% load static %}   <!-- load static files like css,js,images -->
+{% block title %}   <!-- override title block from base.html for css file -->
+    <title>OTP Verification</title>
+{% endblock %}      <!-- end title block -->
+{% block style %}   <!-- override style block from base.html for css file -->
+{% endblock %}      <!-- end style block -->
+
+{% block body %}    <!-- inherit style block from base.html & override below code -->
+    <main class="main">
+        <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('{% static 'assets/images/backgrounds/login-bg.jpg' %}')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">OTP Verification</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+                            {% if warning %}
+                                <div class="alert alert-warning" role="alert" style="text-align: center;">{{ warning }}</div>
+                            {% endif %}
+                            {% if success %}
+                                <div class="alert alert-success" role="alert" style="text-align: center;">{{ success }}</div>
+                            {% endif %}
+                            
+                        
+                            <label class="custom-control-label" for="register-policy" style="font-size: 18px;">
+                                Your Email is: {{ request.session.session_email }} 
+                                <!-- <a href="#">Edit</a>  -->
+                            </label>
+                            <form action="{% url 'otp-verification' %}" method="POST">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="user-otp">Your OTP *</label>
+                                    <input type="tel" class="form-control" id="user-otp" name="user-otp" autofocus="" required>
+                                </div><!-- End .form-group -->
+
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>Verify</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
+                                </div><!-- End .form-footer -->
+                            </form>
+                        </div><!-- .End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+        </div><!-- End .login-page section-bg -->
+    </main><!-- End .main -->
+
+{% endblock %}     <!-- end body block -->
+
+{% block script %}      <!-- inherit script block from base.html for js file -->
+<SCRIPT type="text/javascript">
+    window.history.forward();
+    function noBack() { window.history.forward(); }
+</SCRIPT>
+
+<script>
+    if ( window.history.replaceState ) {
+      window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+{% endblock %}      <!-- end script block -->

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}   <!-- Extend main base file for header and footer part -->
+{% load static %}   <!-- load static files like css,js,images -->
+{% block title %}   <!-- override title block from base.html for css file -->
+    <title>Seller-Update Product</title>
+{% endblock %}      <!-- end title block -->
+{% block style %}   <!-- override style block from base.html for css file -->
+{% endblock %}      <!-- end style block -->
+
+{% block body %}    <!-- inherit style block from base.html & override below code -->
+    <main class="main">
+        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Product</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Update Product</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('{% static 'assets/images/backgrounds/login-bg.jpg' %}')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Update Product</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+                            {% if warning %}
+                                <div class="alert alert-warning" role="alert" style="text-align: center;">{{ warning }}</div>
+                            {% endif %}
+                            {% if success %}
+                                <div class="alert alert-success" role="alert" style="text-align: center;">{{ success }}</div>
+                            {% endif %}
+                            <form action="#" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="new-category">Select Category *</label>                                    
+                                    <select id="new-category" class="form-group" name='new-category' style="background-color:#fafafa; border:1px solid #929191;">
+                                        <option value="{{ product.category }}" selected disabled>{{ product.category }}</option>
+                                        {% for name in category %}
+                                            <option value="{{ name }}">{{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-brand">Select Product Brand *</label>                                    
+                                    <select id="new-brand" class="form-group" name='new-brand' style="background-color:#fafafa; border:1px solid #929191;" required>
+                                        <option selected disabled>{{ product.brand }}</option>
+                                        {% for i in brand %}
+                                            <option value="{{ i }}">{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-name">Name *</label>
+                                    <input type="text" name="new-name" value="{{ product.name }}" class="form-control" id="new-name">
+                                </div><!-- End .form-group -->
+
+                                <div class="form-group">
+                                    <label for="new-desc">Description</label>
+                                    <textarea name="new-desc" id="new-desc" class="form-control">{{ product.desc }}</textarea>
+                                </div><!-- End .form-group -->
+
+                                <div class="form-group">
+                                    <label for="new-price">Unit Price</label>
+                                    <input type="text" name="new-price" value="{{ product.price }}" class="form-control" id="new-price" pattern="[0-9]+(\.[0-9]+)?">
+                                </div><!-- End .form-group -->
+
+                                <div class="form-group">
+                                    <label for="new-offer-price">Offer Price</label>
+                                    <input type="text" name="new-offer-price" value="{{ product.offer_price }}" class="form-control" id="new-offer-price" pattern="[0-9]+(\.[0-9]+)?">
+                                </div><!-- End .form-group -->
+                                
+                                <div class="form-group">
+                                    <label for="old-size">Old Avilable Sizes</label>
+                                    &nbsp;
+                                    <label for="new-size">Select New Avilable Sizes</label>
+                                    <br>
+                                    <select id="old-size" class="form-group" name='old-size' style="width: 80px;text-align: center;background-color:#fafafa; border: #777;" multiple>
+                                        {% for j in product.size.all %}
+                                            <option value="{{ j }}" selected disabled>{{ j }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <select id="new-size" class="form-group" name='new-size' style="width: 80px;text-align: center;background-color:#fafafa; border: #777;" multiple>
+                                        {% for j in size %}
+                                            <option value="{{ j.pk }}">{{ j }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <br>
+                                    <span style="color:#1cc0a0;">You Can Select Multiple Size Option If You Want !</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-main-image">Choose Product Main Image</label>
+                                    <input type="file" name="new-main-image" id="new-main-image" accept="image/*" style="padding-top: 5px;">
+                                </div>
+
+                                <hr>
+                                <div class="form-group">
+                                    <label for="new-sub-images">Choose Product Sub Images</label>
+                                    <input type="file" name="new-sub-images" id="new-sub-images" accept="image/*" style="padding-top: 5px;" multiple>
+                                    <br>
+                                    <span style="color:#1cc0a0;">You Can Select Multiple Images of this Product, If You Want !</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="product-status">Product Activation Status</label> &nbsp;
+                                    <input type="checkbox" name="product-status" class="form-group" id="product-status" {% if product.available == True %}checked{% endif %}>
+                                </div><!-- End .form-group -->
+
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>Update</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
+                                </div><!-- End .form-footer -->
+                            </form>
+                        </div><!-- .End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+        </div><!-- End .login-page section-bg -->
+    </main><!-- End .main -->
+
+{% endblock %}     <!-- end body block -->
+
+{% block script %}      <!-- inherit script block from base.html for js file -->
+<script>
+    if ( window.history.replaceState ) {
+      window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+{% endblock %}      <!-- end script block -->

@@ -1,0 +1,222 @@
+{% extends 'base.html' %}   <!-- Extend main base file for header and footer part -->
+{% load static %}   <!-- load static files like css,js,images -->
+{% block title %}   <!-- override title block from base.html for css file -->
+    <title>Checkout</title>
+{% endblock %}      <!-- end title block -->
+{% block style %}   <!-- override style block from base.html for css file -->
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}      <!-- end style block -->
+
+{% block body %}    <!-- inherit style block from base.html & override below code -->
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url({% static 'assets/images/page-header-bg.jpg' %})">
+            <div class="container">
+                <h1 class="page-title">Checkout<span>Shop</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'cart' %}">Shopping Cart</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content">
+            <div class="checkout">
+                <div class="container">
+                    <div class="checkout-discount">
+                        <form id='discount-form' action="{% url 'discount_coupon' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" class="form-control" name="discount-coupon" id="checkout-discount-input">
+                            <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+                        </form>
+                        <script>
+                            document.getElementById('discount-form').addEventListener('submit', function (event) {
+                                event.preventDefault(); // Prevent the default form submission
+                                // Get the input value
+                                var couponCode = document.getElementById('checkout-discount-input').value;
+                                // Perform any additional logic/validation if needed
+                                // Submit the form using JavaScript
+                                this.submit();
+                            });
+                        </script>
+                    </div><!-- End .checkout-discount -->
+
+                    <form action="{% url 'new-address' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                                    <label>Company Name (Optional)</label>
+                                    <input type="text" name="company-name" class="form-control">
+
+                                    <label>Country *</label>
+                                    <input type="text" class="form-control" name="country" required>
+
+                                    <label>Street address *</label>
+                                    <input type="text" class="form-control" name="address1" placeholder="House number and Street name" required>
+                                    <input type="text" class="form-control" name="address2" placeholder="Appartments, suite, unit etc ..." required>
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Town / City *</label>
+                                            <input type="text" name="city" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <label>State *</label>
+                                            <input type="text" name="state" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <label>Postcode / ZIP *</label>
+                                            <input type="text" name="postcode" class="form-control" required>
+                                        </div><!-- End .col-sm-6 -->
+
+                                        <div class="col-sm-6">
+                                            <label>Mobile *</label>
+                                            <input type="tel" name="mobile" class="form-control">
+                                        </div><!-- End .col-sm-6 -->
+                                    </div><!-- End .row -->
+
+                                    <label>Order notes (optional)</label>
+                                    <textarea class="form-control" name="notes" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+
+                                    <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                        <span class="btn-text">Confirm Address</span>
+                                        <span class="btn-hover-text">Confirm Address</span>
+                                    </button>
+
+                            </div><!-- End .col-lg-9 -->                            
+                    </form>
+
+                            <aside class="col-lg-3">
+                                <div class="summary">
+                                    <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                                    <table class="table table-summary">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for item in cart %}
+                                            <tr>
+                                                <td><a href="{% url 'product-detail' slug=item.product.slug %}">{{ item.product.name }}</a></td>
+                                                <td>Rs. {{ item.product_price }}</td>
+                                            </tr>
+                                            {% endfor %}
+
+                                            <tr class="summary-subtotal">
+                                                <td>Subtotal:</td>
+                                                <td>Rs. {{ request.session.sub_total }}</td>
+                                            </tr><!-- End .summary-subtotal -->
+                                           
+                                            <tr>
+                                                <td>Shipping:</td>
+                                                {% if request.session.sub_total > 1500.00 %}
+                                                    <td>Rs. 0.00</td>
+                                                {% else %}
+                                                    <td>Rs. 150.00</td>
+                                                {% endif %}
+                                            </tr>
+
+                                            {% if request.session.discount_code and request.session.discount_amt %}
+                                                <tr class="summary-shipping">
+                                                    <td>Discount Coupon:</td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                                <tr class="summary-shipping-row">
+                                                    <td>
+                                                        <div class="custom-control custom-radio">
+                                                            <label class="custom-control-label" for="free-shipping">Discount Coupon</label>
+                                                            <span>Code: {{ request.session.discount_code }}</span>
+                                                        </div><!-- End .custom-control -->
+                                                    </td>
+                                                    <td>Rs. -{{ request.session.discount_amt }}</td>
+                                                </tr><!-- End .summary-shipping-row -->
+                                            {% endif %}
+
+                                            {% if request.session.address %}
+                                            <tr>
+                                                <td>Address:</td>
+                                                <td>{{ request.session.address }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            
+                                            <tr class="summary-total">
+                                                <td>Total:</td>
+                                                <td>{{ request.session.total }}</td>
+                                            </tr><!-- End .summary-total -->
+                                        </tbody>
+                                    </table><!-- End .table table-summary -->
+
+                                    <form method="post">
+                                        <button type="button" class="btn btn-lg btn-primary" id="checkout-button">Checkout</button>
+                                        <!-- <button type="button" id="checkout-button" class="btn btn-outline-primary-2 btn-order btn-block">
+                                            <span class="btn-text">Proceed to Payment</span>
+                                            <span class="btn-hover-text">Confirm Details</span>
+                                        </button> -->
+                                    </form>
+                                </div><!-- End .summary -->
+                            </aside><!-- End .col-lg-3 -->
+                        </div><!-- End .row -->
+                    
+                </div><!-- End .container -->
+            </div><!-- End .checkout -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+{% endblock %}     <!-- end body block -->
+
+{% block script %}      <!-- inherit script block from base.html for js file -->
+    <script type="text/javascript">
+
+    var stripe = Stripe('pk_test_51OaYhPSDL3cxIT90nQzU82m0NDDyfWO7Qb7a1CUY1XUf01pBXj9ns8etAH6ih4D2zijwD9wzE3caoSgiE2ecHeoR00DnSR0YQo');
+    var checkoutButton = document.getElementById('checkout-button');
+
+    checkoutButton.addEventListener('click', function() {
+        alert("hello");
+        fetch('../add_pymt/stripe-checkout-session/', {
+            method: 'POST',
+            headers:{
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({'amount':'109'})
+        })
+        alert("Sucess")
+
+        .then(function(response) {
+            return response.json();
+        })
+
+        .then(function(session) {
+            return stripe.redirectToCheckout({ sessionId: session.id });
+        })
+
+        .then(function(result) {
+        // If `redirectToCheckout` fails due to a browser or network
+        // error, you should display the localized error message to your
+        // customer using `error.message`.
+            if (result.error) {
+                alert(result.error.message);
+            }
+        })
+    
+        .catch(function(error) {
+            console.error('Error:', error);
+        });
+    });
+    </script>
+
+{% endblock %}      <!-- end script block -->

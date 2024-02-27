@@ -1,0 +1,89 @@
+{% extends 'base.html' %}   <!-- Extend main base file for header and footer part -->
+{% load static %}   <!-- load static files like css,js,images -->
+{% block title %}   <!-- override title block from base.html for css file -->
+    <title>Checkout</title>
+{% endblock %}      <!-- end title block -->
+{% block style %}   <!-- override style block from base.html for css file -->
+{% endblock %}      <!-- end style block -->
+
+{% block body %}    <!-- inherit style block from base.html & override below code -->
+
+    <main class="main">
+        <div class="page-header text-center" style="background-image: url({% static 'assets/images/page-header-bg.jpg' %})">
+            <div class="container">
+                <h1 class="page-title">Add New Address<span>Address</span></h1>
+            </div><!-- End .container -->
+        </div><!-- End .page-header -->
+        <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'cart' %}">Shopping Cart</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">New Address</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="page-content">
+            <div class="checkout">
+                <div class="container">
+                    
+                    <form action="{% url 'new-address' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-lg-9">
+                                <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+                                
+                                <label>Company Name (Optional)</label>
+                                <input type="text" name="company-name" class="form-control">
+
+                                <label>Country *</label>
+                                <input type="text" class="form-control" name="country" required>
+
+                                <label>Street address *</label>
+                                <input type="text" class="form-control" name="address1" placeholder="House number and Street name" required>
+                                <input type="text" class="form-control" name="address2" placeholder="Appartments, suite, unit etc ..." required>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Town / City *</label>
+                                        <input type="text" name="city" class="form-control" required>
+                                    </div><!-- End .col-sm-6 -->
+
+                                    <div class="col-sm-6">
+                                        <label>State *</label>
+                                        <input type="text" name="state" class="form-control" required>
+                                    </div><!-- End .col-sm-6 -->
+                                </div><!-- End .row -->
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Postcode / ZIP *</label>
+                                        <input type="text" name="postcode" class="form-control" required>
+                                    </div><!-- End .col-sm-6 -->
+
+                                    <div class="col-sm-6">
+                                        <label>Mobile *</label>
+                                        <input type="tel" name="mobile" class="form-control">
+                                    </div><!-- End .col-sm-6 -->
+                                </div><!-- End .row -->
+
+                                <label>Order notes (optional)</label>
+                                <textarea class="form-control" name="notes" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+                        
+                                <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                    <span class="btn-text">Add New Address</span>
+                                    <span class="btn-hover-text">Add New Address</span>
+                                </button>
+                            </div><!-- End .col-lg-9 --> 
+                        </div><!-- End .row -->
+                    </form>
+                </div><!-- End .container -->
+            </div><!-- End .checkout -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
+
+{% endblock %}     <!-- end body block -->
+
+{% block script %}      <!-- inherit script block from base.html for js file -->
+{% endblock %}      <!-- end script block -->

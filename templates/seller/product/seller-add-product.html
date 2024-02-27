@@ -1,0 +1,137 @@
+{% extends 'base.html' %}   <!-- Extend main base file for header and footer part -->
+{% load static %}   <!-- load static files like css,js,images -->
+{% block title %}   <!-- override title block from base.html for css file -->
+    <title>Seller-Add Product</title>
+{% endblock %}      <!-- end title block -->
+{% block style %}   <!-- override style block from base.html for css file -->
+{% endblock %}      <!-- end style block -->
+
+{% block body %}    <!-- inherit style block from base.html & override below code -->
+    <main class="main">
+        <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+            <div class="container">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item"><a href="#">Product</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Add Product</li>
+                </ol>
+            </div><!-- End .container -->
+        </nav><!-- End .breadcrumb-nav -->
+
+        <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('{% static 'assets/images/backgrounds/login-bg.jpg' %}')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Add Product</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+                            {% if warning %}
+                                <div class="alert alert-warning" role="alert" style="text-align: center;">{{ warning }}</div>
+                            {% endif %}
+                            {% if success %}
+                                <div class="alert alert-success" role="alert" style="text-align: center;">{{ success }}</div>
+                            {% endif %}
+                            <form action="{% url 'add-product' %}" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="category">Select Category *</label>                                    
+                                    <select id="category" class="form-group" name='category' autofocus="" style="background-color:#fafafa; border:1px solid #929191;" required>
+                                        <option selected disabled hidden>Select Category</option>
+                                        {% for name in category_name %}
+                                            <option value="{{ name }}">{{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="brand">Select Product Brand *</label>                                    
+                                    <select id="brand" class="form-group" name='brand' style="background-color:#fafafa; border:1px solid #929191;" required>
+                                        <option selected disabled hidden>Select Brand</option>
+                                        {% for i in brand %}
+                                            <option value="{{ i.name }}">{{ i.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="product-name">Name *</label>
+                                    <input type="text" name="product-name" class="form-control" id="product-name" required>
+                                </div><!-- End .form-group -->
+
+                                <div class="form-group">
+                                    <label for="product-desc">Description</label>
+                                    <textarea name="product-desc" id="product-desc" class="form-control" placeholder="in 400 Characters..."></textarea>
+                                </div><!-- End .form-group -->
+
+                                <div class="form-group">
+                                    <label for="price">Unit Price</label>
+                                    <input type="text" name="price" class="form-control" id="price" pattern="[0-9]+(\.[0-9]+)?" required>
+                                </div><!-- End .form-group -->
+
+                                <div class="form-group">
+                                    <label for="offer-price">Offer Price</label>
+                                    <input type="text" name="offer-price" class="form-control" id="offer-price" pattern="[0-9]+(\.[0-9]+)?" required>
+                                </div><!-- End .form-group -->
+                                
+                                <div class="row">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <label for="product-size">Select Product Size</label>
+                                    <br>
+                                    <select id="product-size" class="form-group" name='product-size' style="width: 80px;text-align: center;background-color:#fafafa; border: #777;" multiple>
+                                        {% for j in size %}
+                                            <option value="{{ j.pk }}">{{ j }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <br>
+                                    <span style="color:#1cc0a0;">You Can Select Multiple Size Option If You Want !</span>
+                                </div>
+                                </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="main-image">Choose Product Main Image</label>
+                                    <input type="file" name="main-image" id="main-image" accept="image/*" style="padding-top: 5px;" required>
+                                </div>
+
+                                <hr>
+                                <div class="form-group">
+                                    <label for="sub-images">Choose Product Sub Images</label>
+                                    <input type="file" name="sub-images" id="sub-images" accept="image/*" style="padding-top: 5px;" multiple>
+                                    <br>
+                                    <span style="color:#1cc0a0;">You Can Select Multiple Images of this Product, If You Want !</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="product-status">Product Activation Status</label> &nbsp;
+                                    <input type="checkbox" name="product-status" class="form-group" id="product-status" checked=checked>
+                                </div><!-- End .form-group -->
+
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>Add</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
+                                </div><!-- End .form-footer -->
+                            </form>
+                        </div><!-- .End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+        </div><!-- End .login-page section-bg -->
+    </main><!-- End .main -->
+
+{% endblock %}     <!-- end body block -->
+
+{% block script %}      <!-- inherit script block from base.html for js file -->
+<script>
+    if ( window.history.replaceState ) {
+      window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+{% endblock %}      <!-- end script block -->

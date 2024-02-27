@@ -1,0 +1,128 @@
+{% extends 'base.html' %}   <!-- Extend main base file for header and footer part -->
+{% load static %}   <!-- load static files like css,js,images -->
+{% block title %}   <!-- override title block from base.html for css file -->
+    <title>Product Detail</title>
+{% endblock %}      <!-- end title block -->
+{% block style %}   <!-- override style block from base.html for css file -->
+{% endblock %}      <!-- end style block -->
+
+
+{% block body %}    <!-- inherit style block from base.html & override below code -->
+    <main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container d-flex align-items-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'product-all' %}">All Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Product Detail</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="container">
+            <div class="product-details-top">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="product-gallery product-gallery-vertical">
+                            <div class="row">
+                                <figure class="product-main-image">
+                                    <img id="product-zoom" src="{{ product.main_image.url }}" data-zoom-image="{{ image.subimage.url }}" alt="product image">
+                                </figure><!-- End .product-main-image -->
+                                
+                                <div id="product-zoom-gallery" class="product-image-gallery" >
+                                    {% for image in productimage %}
+                                    <a class="product-gallery-item active" href="#" data-image="{{ image.subimage.url }}" data-zoom-image="{{ image.subimage.url }}">
+                                        <img src="{{ image.subimage.url }}" alt="product side">
+                                    </a>
+                                    {% endfor %}
+                                </div><!-- End .product-image-gallery -->
+                            </div><!-- End .row -->
+                        </div><!-- End .product-gallery -->
+                    </div><!-- End .col-md-6 -->
+
+                    <div class="col-md-6">
+                        <div class="product-details">
+                            <h1 class="product-title">{{ product.name }}</h1><!-- End .product-title -->
+
+                            <div class="product-price">
+                                Rs.{{ product.offer_price }}
+                            </div><!-- End .product-price -->
+
+                            <div class="product-content">
+                                <p>{{ product.desc }}</p>
+                            </div><!-- End .product-content -->
+
+                            <form action="{% url 'add-to-cart' product_slug=product.slug %}" method="POST">
+                                {% csrf_token %}
+                                <div class="details-filter-row details-row-size">
+                                    <label for="size">Size:</label>
+                                    <div class="select-custom">
+                                        <select name="size" id="size" class="form-control" autofocus required>
+                                            <option value="#" selected disabled>Select a size</option>
+                                            {% for size in product.size.all %}
+                                                <option value="{{ size }}">{{ size }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div><!-- End .select-custom -->
+                                </div><!-- End .details-filter-row -->
+                                
+                                <div class="details-filter-row details-row-size">
+                                    <label for="qty">Qty:</label>
+                                    <div class="select-custom">
+                                        <select name="qty" id="qty" class="form-control" required>
+                                            <option value="#" selected disabled>Quantity: 1</option>
+                                            {% for number in qty_range %}    
+                                                <option value="{{ number }}">Quantity: {{ number }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div><!-- End .select-custom -->
+                                </div><!-- End .details-filter-row -->
+                                
+                                <div class="product-details-action">
+                                    <button type="submit" style="border: none;width: 190px;">
+                                        <a href="#" class="btn-product btn-cart">
+                                            <span>add to cart</span>
+                                        </a>
+                                    </button>
+                                    {% if wishlist_flag %}
+                                        <div class="details-action-wrapper">
+                                            <a href="{% url 'remove-from-wishlist' product_slug=product.slug %}" style="color: red;" class="btn-product btn-wishlist" title="Wishlist"><span style="color: red;">Remove from Wishlist</span></a>
+                                        </div><!-- End .details-action-wrapper -->
+                                    {% else %}
+                                        <div class="details-action-wrapper">
+                                            <a href="{% url 'add-to-wishlist' product_slug=product.slug %}" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
+                                        </div><!-- End .details-action-wrapper -->
+                                    {% endif %}
+                                    
+                                </div><!-- End .product-details-action -->
+                            </form>
+
+                            <div class="product-details-footer">
+                                <div class="product-cat">
+                                    <span>Category:</span>
+                                    <a href="#">Women</a>,
+                                    <a href="#">Dresses</a>,
+                                    <a href="#">Yellow</a>
+                                </div><!-- End .product-cat -->
+
+                                <div class="social-icons social-icons-sm">
+                                    <span class="social-label">Share:</span>
+                                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                                </div>
+                            </div><!-- End .product-details-footer -->
+                        </div><!-- End .product-details -->
+                    </div><!-- End .col-md-6 -->
+                </div><!-- End .row -->
+            </div><!-- End .product-details-top -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+    </main><!-- End .main -->
+{% endblock %}     <!-- end body block -->
+
+
+{% block script %}      <!-- inherit script block from base.html for js file -->
+{% endblock %}      <!-- end script block -->
